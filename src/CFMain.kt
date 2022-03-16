@@ -18,9 +18,18 @@ fun main() {
 
 }
 
-class GameState{
+class Results {
+
+}
+
+class GameState { // controls the flow of the game via turns
     val turnStart: Boolean = false
-    val
+    val moveOpen: Boolean = false // makes moves available to choose from
+    val moveRun: Boolean = false // runs moves
+    val result: Results
+        get() {
+            TODO()
+        }
 }
 
 open class Fighter(val hp: Int, val state: GameState) {
