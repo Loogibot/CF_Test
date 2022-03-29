@@ -1,6 +1,20 @@
 fun main() {
 
-    val playerChoice = randomMove("Player")
+
+    class Player(): Fighter(200, true) {
+
+    }
+
+    class Opponent(): Fighter(200, false) {
+
+    }
+
+
+    println("""
+        Welcome to Chain Fighter!!!
+        Please enter a name for your player:
+                
+    """.trimIndent())
 
     val drawPlayerMove = when (playerChoice.name) {
         "kick" -> kick.name
@@ -11,9 +25,8 @@ fun main() {
     }
 
     println("""
-        Welcome to Chain Fighter!!!
+        
         $drawPlayerMove is your available move
-                
     """.trimIndent())
 
 }
@@ -22,22 +35,32 @@ class Results {
 
 }
 
-class GameState ( // controls the flow of the game via turns
-    val turnStart: Boolean = false,
-    val moveOpen: Boolean = false, // makes moves available to choose from
-    val moveRun: Boolean = false, // runs moves
-    val result: String = ""
-)
-
-open class Fighter(val hp: Int, val state: GameState) {
-
+class GameState { // controls the flow of the game via turns
+    val turnStart: Boolean = false
+    val moveOpen: Boolean = false // makes moves available to choose from
+    val moveRun: Boolean = false // runs moves
+    val result: Results? = null
 }
 
-class Player(): Fighter(200) {
+open class Fighter(val hp: Int = 200, val human: Boolean) {
+
+    if (human == true) {
+        val playerChoice = randomMove("Player")
+
+    } else {
+        val playerChoice = randomMove("Opponent")
+    }
 
 }
+/* Create moves to be selected, with built-in name, damage, first and second advantages
+    all of this should be good for now
+ */
 
-data class Move(val name: String, val damage: Int, val firstAdv: String, val secondAdv: String) {
+
+data class Move(val name: String,
+                val damage: Int,
+                val firstAdv: String,
+                val secondAdv: String) {
 }
 
 val kick = Move("kick",25, "punch", "shield")
@@ -48,6 +71,7 @@ val punch = Move("punch",15, "grab", "dodge")
 
 val allMoves = listOf(kick,grab,dodge,shield,punch)
 
+// Randomly selects a move, might need to change
 fun randomMove(player: String): Move {
     return when (player) {
         "Player" -> {
