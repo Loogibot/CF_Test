@@ -44,13 +44,17 @@ class GameState { // controls the flow of the game via turns
 
 open class Fighter(val hp: Int = 200, val human: Boolean) {
 
-    if (human == true) {
-        val playerChoice = randomMove("Player")
+    /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
+    or you'll get expecting member declaration
 
-    } else {
-        val playerChoice = randomMove("Opponent")
+    */
+    fun whoIsPlaying(human: Boolean) {
+        if (human) {
+            val playerChoice = randomMove("Player")
+        } else {
+            val oppChoice = randomMove("Opponent")
+        }
     }
-
 }
 /* Create moves to be selected, with built-in name, damage, first and second advantages
     all of this should be good for now
