@@ -1,14 +1,6 @@
 fun main() {
 
-
-    class Player(): Fighter(200, true) {
-
-    }
-
-    class Opponent(): Fighter(200, false) {
-
-    }
-
+    val playerChoice = Fighter(200, true)
 
     println("""
         Welcome to Chain Fighter!!!
@@ -17,10 +9,10 @@ fun main() {
     """.trimIndent())
 
     val drawPlayerMove = when (playerChoice.name) {
-        "kick" -> kick.name
-        "punch" -> punch.name
-        "dodge" -> dodge.name
-        "grab" -> grab.name
+        kick -> kick.name
+        punch -> punch.name
+        dodge -> dodge.name
+        grab -> grab.name
         else -> shield.name
     }
 
@@ -32,7 +24,6 @@ fun main() {
 }
 
 class Results {
-
 }
 
 class GameState { // controls the flow of the game via turns
@@ -46,20 +37,22 @@ open class Fighter(val hp: Int = 200, val human: Boolean) {
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
-
     */
-    fun whoIsPlaying(human: Boolean) {
-        if (human) {
-            val playerChoice = randomMove("Player")
+
+    fun whoIsPlaying(human: Boolean): Move {
+        return if (human) {
+            randomMove("Player")
         } else {
-            val oppChoice = randomMove("Opponent")
+            randomMove("Opponent")
         }
     }
+
+    val name = whoIsPlaying(true)
 }
+
 /* Create moves to be selected, with built-in name, damage, first and second advantages
     all of this should be good for now
  */
-
 
 data class Move(val name: String,
                 val damage: Int,
