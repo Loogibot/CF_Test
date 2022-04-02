@@ -1,12 +1,7 @@
 fun main() {
 
     val playerChoice = Fighter(200, true)
-
-    println("""
-        Welcome to Chain Fighter!!!
-        Please enter a name for your player:
-                
-    """.trimIndent())
+    val opponentChoice = Fighter(200, true)
 
     val drawPlayerMove = when (playerChoice.name) {
         kick -> kick.name
@@ -16,11 +11,31 @@ fun main() {
         else -> shield.name
     }
 
+    val drawOpponentChoice = when (playerChoice.name) {
+        kick -> kick.name
+        punch -> punch.name
+        dodge -> dodge.name
+        grab -> grab.name
+        else -> shield.name
+    }
+
     println("""
         
-        $drawPlayerMove is your available move
+        Welcome to Chain Fighter!!!
+        An opponent appears before you. You each have 200 HP.
+        Type K for Kick, P for Punch, G for Grab, D for Dodge and S for Shield.
+        Only two moves will be available at each turn. Choose wisely! 
+        Type start to begin!
+        
     """.trimIndent())
 
+    val gameStart = readln()
+
+    while (gameStart == "start")
+
+    println("""
+            $drawPlayerMove and $drawPlayerMove are your available move    
+    """.trimIndent())
 }
 
 class Results {
