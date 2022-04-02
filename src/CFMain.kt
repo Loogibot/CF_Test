@@ -24,15 +24,17 @@ fun main() {
         Welcome to Chain Fighter!!!
         An opponent appears before you. You each have 200 HP.
         Type K for Kick, P for Punch, G for Grab, D for Dodge and S for Shield.
-        Press enter to begin!
+        Only two moves will be available at each turn. Choose wisely! 
+        Type start to begin!
         
     """.trimIndent())
 
     val gameStart = readln()
 
+    while (gameStart == "start")
 
     println("""
-            $drawPlayerMove is your available move    
+            $drawPlayerMove and $drawPlayerMove are your available move    
     """.trimIndent())
 }
 
