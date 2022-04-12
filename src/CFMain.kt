@@ -1,23 +1,24 @@
 fun main() {
 
-    val playerChoice = Fighter(200, true)
-    val opponentChoice = Fighter(200, false)
+    val playerChoice1 = Fighter(200, "pos1")
+    val playerChoice2 = Fighter(200, "pos2")
+    val opponentChoice = Fighter(200, "pos3")
 
-    val drawPlayerMove1 = when (playerChoice.name) {
+    val drawPlayerMove1 = when (playerChoice1.move) {
         kick -> kick.name
         punch -> punch.name
         dodge -> dodge.name
         grab -> grab.name
         else -> shield.name
     }
-    val drawPlayerMove2 = when (playerChoice.name) {
+    val drawPlayerMove2 = when (playerChoice2.move) {
         kick -> kick.name
         punch -> punch.name
         dodge -> dodge.name
         grab -> grab.name
         else -> shield.name
     }
-    val drawOpponentChoice = when (playerChoice.name) {
+    val drawOpponentChoice = when (opponentChoice.move) {
         kick -> kick.name
         punch -> punch.name
         dodge -> dodge.name
@@ -29,7 +30,7 @@ fun main() {
         
         Welcome to Chain Fighter!!!
         An opponent appears before you. You each have 200 HP.
-        Type K for Kick, P for Punch, G for Grab, D for Dodge and S for Shield.
+        Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield.
         Only two moves will be available at each turn. Choose wisely! 
         Type start to begin!
         
@@ -51,27 +52,26 @@ class Results {
 
 class GameState { // controls the flow of the game via turns
     val turnStart: Boolean = false
-    val moveOpen: Boolean = false // makes moves available to choose from
+    val moveOpen: Boolean = false // Make moves available to choose from
     val moveRun: Boolean = false // runs moves
     val result: Results? = null
 }
 
-open class Fighter(val hp: Int , val human: Boolean) {
+open class Fighter(val hp: Int, private val position: String) {
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
     */
 
-    fun whoIsPlaying(human: Boolean): Move {
-        return if (human) {
-            randomMove("move1")
-            randomMove("move2")
-        } else {
-            randomMove("Opponent")
+    private fun whoIsPlaying(position: String): Move {
+        return when (position) {
+            "pos1" -> randomMove("move1")
+            "pos2" -> randomMove("move2")
+            else -> randomMove("Opponent")
         }
     }
 
-    val name = whoIsPlaying(true)
+    val move = whoIsPlaying(position)
 }
 
 /* Create moves to be selected, with built-in name, damage, first and second advantages
@@ -92,7 +92,7 @@ val punch = Move("punch",15, "grab", "dodge")
 
 val allMoves = listOf(kick,grab,dodge,shield,punch)
 
-// Randomly selects a move, might need to change
+// Randomly selects a move, might need to change to accommodate
 fun randomMove(player: String): Move {
     return when (player) {
         "move1" -> allMoves.random()
