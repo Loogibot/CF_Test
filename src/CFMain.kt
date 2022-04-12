@@ -1,16 +1,22 @@
 fun main() {
 
     val playerChoice = Fighter(200, true)
-    val opponentChoice = Fighter(200, true)
+    val opponentChoice = Fighter(200, false)
 
-    val drawPlayerMove = when (playerChoice.name) {
+    val drawPlayerMove1 = when (playerChoice.name) {
         kick -> kick.name
         punch -> punch.name
         dodge -> dodge.name
         grab -> grab.name
         else -> shield.name
     }
-
+    val drawPlayerMove2 = when (playerChoice.name) {
+        kick -> kick.name
+        punch -> punch.name
+        dodge -> dodge.name
+        grab -> grab.name
+        else -> shield.name
+    }
     val drawOpponentChoice = when (playerChoice.name) {
         kick -> kick.name
         punch -> punch.name
@@ -31,11 +37,13 @@ fun main() {
 
     val gameStart = readln()
 
-    while (gameStart == "start")
+    while (gameStart == "start") {
 
-    println("""
-            $drawPlayerMove and $drawPlayerMove are your available move    
+        println("""
+            $drawPlayerMove1 and $drawPlayerMove2 are your available move    
     """.trimIndent())
+    break
+    }
 }
 
 class Results {
@@ -48,7 +56,7 @@ class GameState { // controls the flow of the game via turns
     val result: Results? = null
 }
 
-open class Fighter(val hp: Int = 200, val human: Boolean) {
+open class Fighter(val hp: Int , val human: Boolean) {
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
@@ -56,7 +64,8 @@ open class Fighter(val hp: Int = 200, val human: Boolean) {
 
     fun whoIsPlaying(human: Boolean): Move {
         return if (human) {
-            randomMove("Player")
+            randomMove("move1")
+            randomMove("move2")
         } else {
             randomMove("Opponent")
         }
@@ -86,11 +95,8 @@ val allMoves = listOf(kick,grab,dodge,shield,punch)
 // Randomly selects a move, might need to change
 fun randomMove(player: String): Move {
     return when (player) {
-        "Player" -> {
-            allMoves.random()
-        }
-        else -> {
-            allMoves.random()
-        }
+        "move1" -> allMoves.random()
+        "move2" -> allMoves.random()
+        else -> allMoves.random()
     }
 }
