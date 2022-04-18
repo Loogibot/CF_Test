@@ -6,7 +6,7 @@ fun main() {
 
     println("""
         
-        Welcome to Chain Fighter!!!
+        Welcome to CHAIN FIGHTER!!!
         
         An opponent appears before you. You each have 200 HP.
         Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield.
@@ -20,7 +20,8 @@ fun main() {
     while (gameStart == "start") {
 
         println("""
-            ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move    
+            Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
+            ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
     """.trimIndent())
     break
     }
@@ -37,7 +38,7 @@ class GameState { // controls the flow of the game via turns
 }
 
 
-open class Fighter(val hp: Int, private val position: String) {
+open class Fighter(private val hp: Int, private val position: String) {
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
@@ -52,6 +53,8 @@ open class Fighter(val hp: Int, private val position: String) {
     }
 
     private val move = whoIsPlaying(position)
+
+    fun currentHP() = hp
 
     fun drawMove(): String {
         return when (move) {
