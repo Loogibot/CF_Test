@@ -4,31 +4,10 @@ fun main() {
     val playerChoice2 = Fighter(200, "pos2")
     val opponentChoice = Fighter(200, "pos3")
 
-    val drawPlayerMove1 = when (playerChoice1.move) {
-        kick -> kick.name
-        punch -> punch.name
-        dodge -> dodge.name
-        grab -> grab.name
-        else -> shield.name
-    }
-    val drawPlayerMove2 = when (playerChoice2.move) {
-        kick -> kick.name
-        punch -> punch.name
-        dodge -> dodge.name
-        grab -> grab.name
-        else -> shield.name
-    }
-    val drawOpponentChoice = when (opponentChoice.move) {
-        kick -> kick.name
-        punch -> punch.name
-        dodge -> dodge.name
-        grab -> grab.name
-        else -> shield.name
-    }
-
     println("""
         
-        Welcome to Chain Fighter!!!
+        Welcome to CHAIN FIGHTER!!!
+        
         An opponent appears before you. You each have 200 HP.
         Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield.
         Only two moves will be available at each turn. Choose wisely! 
@@ -41,7 +20,8 @@ fun main() {
     while (gameStart == "start") {
 
         println("""
-            $drawPlayerMove1 and $drawPlayerMove2 are your available move    
+            Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
+            ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
     """.trimIndent())
     break
     }
@@ -57,7 +37,8 @@ class GameState { // controls the flow of the game via turns
     val result: Results? = null
 }
 
-open class Fighter(val hp: Int, private val position: String) {
+
+open class Fighter(private val hp: Int, private val position: String) {
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
@@ -71,7 +52,19 @@ open class Fighter(val hp: Int, private val position: String) {
         }
     }
 
-    val move = whoIsPlaying(position)
+    private val move = whoIsPlaying(position)
+
+    fun currentHP() = hp
+
+    fun drawMove(): String {
+        return when (move) {
+            kick -> kick.name
+            punch -> punch.name
+            dodge -> dodge.name
+            grab -> grab.name
+            else -> shield.name
+        }
+    }
 }
 
 /* Create moves to be selected, with built-in name, damage, first and second advantages
