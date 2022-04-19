@@ -15,7 +15,11 @@ fun main() {
         
     """.trimIndent())
 
+    val gameTurn = GameState()
+
     val gameStart = readln()
+
+
 
     while (gameStart == "start") {
 
@@ -30,11 +34,16 @@ fun main() {
 class Results {
 }
 
-class GameState { // controls the flow of the game via turns
-    val turnStart: Boolean = false
-    val moveOpen: Boolean = false // Make moves available to choose from
-    val moveRun: Boolean = false // runs moves
-    val result: Results? = null
+class GameState (// controls the flow of the game via turns
+    val turnStart: Boolean = false,
+    val moveOpen: Boolean = false, // Make moves available to choose from
+    val moveRun: Boolean = false, // runs moves
+    val result: Results? = null )
+    {
+
+
+
+
 }
 
 
