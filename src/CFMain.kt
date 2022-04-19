@@ -15,11 +15,9 @@ fun main() {
         
     """.trimIndent())
 
-    val gameTurn = GameState()
+    var gameTurn = GameState()
 
     val gameStart = readln()
-
-
 
     while (gameStart == "start") {
 
@@ -27,6 +25,8 @@ fun main() {
             Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
             ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
     """.trimIndent())
+
+        gameTurn.turnStart = true
     break
     }
 }
@@ -35,13 +35,11 @@ class Results {
 }
 
 class GameState (// controls the flow of the game via turns
-    val turnStart: Boolean = false,
+    var turnStart: Boolean = false,
     val moveOpen: Boolean = false, // Make moves available to choose from
     val moveRun: Boolean = false, // runs moves
     val result: Results? = null )
     {
-
-
 
 
 }
