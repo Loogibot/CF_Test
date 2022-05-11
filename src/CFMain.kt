@@ -15,14 +15,18 @@ fun main() {
         
     """.trimIndent())
 
+    val gameTurn = GameState()
+
     val gameStart = readln()
 
     while (gameStart == "start") {
+        gameTurn.turn = true
 
         println("""
             Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
             ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
     """.trimIndent())
+
     break
     }
 }
@@ -30,15 +34,24 @@ fun main() {
 class Results {
 }
 
-class GameState { // controls the flow of the game via turns
-    val turnStart: Boolean = false
-    val moveOpen: Boolean = false // Make moves available to choose from
-    val moveRun: Boolean = false // runs moves
-    val result: Results? = null
+class GameState(// controls the flow of the game via turns
+    turnStart: Boolean = false,
+    moveOpen: Boolean = false, // Make moves available to choose from
+    val moveRun: Boolean = false, // runs moves
+    val result: Results? = null )
+
+    {
+    var turn = when (turnStart) {
+        moveOpen -> true
+        else -> {}
+    }
 }
 
 
-open class Fighter(private val hp: Int, private val position: String) {
+class Fighter(private val hp: Int, private val position: String) {
+    // implement game state
+    // val gameState = GameState()
+    // gameState.turn
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
