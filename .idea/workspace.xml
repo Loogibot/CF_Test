@@ -45,7 +45,7 @@
   <component name="RunManager">
     <configuration name="CFMainKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="CFMainKt" />
-      <module name="CF TEST" />
+      <shortenClasspath name="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
