@@ -1,0 +1,29 @@
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	
++++ b/README.md	(date 1652290684428)
+@@ -1,4 +1,2 @@
+ # CF_Test
+ Testing Chain Fighter logic and design
+-
+-This is simply the underlying logic for Chain Fighter in one file format. I want to create a more robust package separated system later on.
+diff --git a/.idea/libraries/KotlinJavaRuntime.xml b/.idea/libraries/KotlinJavaRuntime.xml
+deleted file mode 100644
+diff --git a/.idea/dbnavigator.xml b/.idea/dbnavigator.xml
+deleted file mode 100644
+diff --git a/.idea/vcs.xml b/.idea/vcs.xml
+deleted file mode 100644
+diff --git a/.idea/.gitignore b/.idea/.gitignore
+deleted file mode 100644
+diff --git a/.idea/modules.xml b/.idea/modules.xml
+deleted file mode 100644
+diff --git a/.idea/.name b/.idea/.name
+deleted file mode 100644
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+deleted file mode 100644
+diff --git a/CF TEST.iml b/CF TEST.iml
+deleted file mode 100644
