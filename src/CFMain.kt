@@ -9,16 +9,20 @@ fun main() {
         
         Welcome to CHAIN FIGHTER!!!
         
-        An opponent appears before you. You each have 200 HP. You can play 3 moves during your
-        turn, which is called a chain. Your chain will be pitted against the opponent's chain, 
-        comparing each position. When the greater number of moves per chain wins against the 
-        opposing chain, that chain's total damage is summed and applied to the loser's HP.
+        An opponent appears before you!
+        
+        You each have 200 HP. You can play 3 moves during your turn, which is called a chain.
+        Your chain will be pitted against the opponent's chain, comparing each position. 
+        When the greater number of moves per chain wins against the opposing chain, 
+        that chain's total damage is summed and applied to the loser's HP.
+        
         Each move also has a cost, which limits how many of them you can use in a chain. The 
         chain costs 4 points to use. Kick and Punch cost 2 points, Grab and Dodge cost 1
-        and Shield costs 1.
+        and Shield costs 1. The chain costs return to 4 after each turn.
+        
         Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield, 
         in the order you want them to appear in your chain. Choose wisely! 
-        Type start to begin!
+        Type `start` to begin!
         
     """.trimIndent()
     )
@@ -33,7 +37,6 @@ fun main() {
         println(
             """
             Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
-            ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
     """.trimIndent()
         )
 
@@ -91,7 +94,7 @@ class Fighter(private val hp: Int, private val position: String) {
  */
 
 data class Move(
-    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String,val cost: Int
+    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String, val cost: Int
 ) {}
 
 val kick = Move("kick", 25, "punch", "shield", 2)
