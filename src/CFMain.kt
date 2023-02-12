@@ -4,16 +4,24 @@ fun main() {
     val playerChoice2 = Fighter(200, "pos2")
     val opponentChoice = Fighter(200, "pos3")
 
-    println("""
+    println(
+        """
         
         Welcome to CHAIN FIGHTER!!!
         
-        An opponent appears before you. You each have 200 HP.
-        Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield.
-        Only two moves will be available at each turn. Choose wisely! 
+        An opponent appears before you. You each have 200 HP. You can play 3 moves during your
+        turn, which is called a chain. Your chain will be pitted against the opponent's chain, 
+        comparing each position. When the greater number of moves per chain wins against the 
+        opposing chain, that chain's total damage is summed and applied to the loser's HP.
+        Each move also has a cost, which limits how many of them you can use in a chain. The 
+        chain costs 4 points to use. Kick and Punch cost 2 points, Grab and Dodge cost 1
+        and Shield costs 1.
+        Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield, 
+        in the order you want them to appear in your chain. Choose wisely! 
         Type start to begin!
         
-    """.trimIndent())
+    """.trimIndent()
+    )
 
     val gameTurn = GameState()
 
@@ -22,31 +30,29 @@ fun main() {
     while (gameStart == "start") {
         gameTurn.turn = true
 
-        println("""
+        println(
+            """
             Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
             ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
-    """.trimIndent())
+    """.trimIndent()
+        )
 
-    break
+        break
     }
 }
 
-class Results {
-}
+class Results {}
 
 class GameState(// controls the flow of the game via turns
-    turnStart: Boolean = false,
-    moveOpen: Boolean = false, // Make moves available to choose from
+    turnStart: Boolean = false, moveOpen: Boolean = false, // Make moves available to choose from
     val moveRun: Boolean = false, // runs moves
-    val result: Results? = null )
-
-    {
+    val result: Results? = null
+) {
     var turn = when (turnStart) {
         moveOpen -> true
         else -> {}
     }
 }
-
 
 class Fighter(private val hp: Int, private val position: String) {
     // implement game state
@@ -84,19 +90,17 @@ class Fighter(private val hp: Int, private val position: String) {
     all of this should be good for now
  */
 
-data class Move(val name: String,
-                val damage: Int,
-                val firstAdv: String,
-                val secondAdv: String) {
-}
+data class Move(
+    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String,val cost: Int
+) {}
 
-val kick = Move("kick",25, "punch", "shield")
-val grab = Move("grab",5, "kick", "shield")
-val dodge = Move("dodge",0, "kick", "grab")
-val shield = Move("shield",5, "punch", "dodge")
-val punch = Move("punch",15, "grab", "dodge")
+val kick = Move("kick", 25, "punch", "shield", 2)
+val grab = Move("grab", 5, "kick", "shield", 2)
+val dodge = Move("dodge", 0, "kick", "grab", 1)
+val shield = Move("shield", 5, "punch", "dodge", 1)
+val punch = Move("punch", 15, "grab", "dodge", 0)
 
-val allMoves = listOf(kick,grab,dodge,shield,punch)
+val allMoves = listOf(kick, grab, dodge, shield, punch)
 
 // Randomly selects a move, might need to change to accommodate
 fun randomMove(player: String): Move {

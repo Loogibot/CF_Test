@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="4d55118b-f6c6-42b5-9234-a85f8a020b47" name="Changes" comment="2nd commit and push">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CF TEST/CFMainKt.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CF TEST/CFMainKt.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CF TEST/Fighter.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CF TEST/Fighter.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CF TEST/GameState.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CF TEST/GameState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CF TEST/META-INF/CF TEST.kotlin_module" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CF TEST/META-INF/CF TEST.kotlin_module" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CF TEST/Move.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CF TEST/Move.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/CF TEST/Results.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/CF TEST/Results.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CFMain.kt" beforeDir="false" afterPath="$PROJECT_DIR$/src/CFMain.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -78,7 +88,19 @@
       <map>
         <entry key="MAIN">
           <value>
-            <State />
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main/one_filer3" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
           </value>
         </entry>
       </map>
