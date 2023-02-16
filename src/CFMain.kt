@@ -4,7 +4,8 @@ fun main() {
     val playerChoice2 = Fighter(200, "pos2")
     val opponentChoice = Fighter(200, "pos3")
 
-    println("""
+    println(
+        """
         
         Welcome to CHAIN FIGHTER!!!
         
@@ -23,7 +24,8 @@ fun main() {
         in the order you want them to appear in your chain. Choose wisely! 
         Type `start` to begin!
         
-    """.trimIndent())
+    """.trimIndent()
+    )
 
     val gameTurn = GameState()
 
@@ -32,31 +34,28 @@ fun main() {
     while (gameStart == "start") {
         gameTurn.turn = true
 
-        println("""
+        println(
+            """
             Your current HP is ${playerChoice1.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
-            ${playerChoice1.drawMove()} and ${playerChoice2.drawMove()} are your available move.
-    """.trimIndent())
+    """.trimIndent()
+        )
 
-    break
+        break
     }
 }
 
-class Results {
-}
+class Results {}
 
 class GameState(// controls the flow of the game via turns
-    turnStart: Boolean = false,
-    moveOpen: Boolean = false, // Make moves available to choose from
+    turnStart: Boolean = false, moveOpen: Boolean = false, // Make moves available to choose from
     val moveRun: Boolean = false, // runs moves
-    val result: Results? = null )
-
-    {
+    val result: Results? = null
+) {
     var turn = when (turnStart) {
         moveOpen -> true
         else -> {}
     }
 }
-
 
 class Fighter(private val hp: Int, private val position: String) {
     // implement game state
@@ -94,19 +93,17 @@ class Fighter(private val hp: Int, private val position: String) {
     all of this should be good for now
  */
 
-data class Move(val name: String,
-                val damage: Int,
-                val firstAdv: String,
-                val secondAdv: String) {
-}
+data class Move(
+    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String, val cost: Int
+) {}
 
-val kick = Move("kick",25, "punch", "shield")
-val grab = Move("grab",5, "kick", "shield")
-val dodge = Move("dodge",0, "kick", "grab")
-val shield = Move("shield",5, "punch", "dodge")
-val punch = Move("punch",15, "grab", "dodge")
+val kick = Move("kick", 25, "punch", "shield", 2)
+val grab = Move("grab", 5, "kick", "shield", 2)
+val dodge = Move("dodge", 0, "kick", "grab", 1)
+val shield = Move("shield", 5, "punch", "dodge", 1)
+val punch = Move("punch", 15, "grab", "dodge", 0)
 
-val allMoves = listOf(kick,grab,dodge,shield,punch)
+val allMoves = listOf(kick, grab, dodge, shield, punch)
 
 // Randomly selects a move, might need to change to accommodate
 fun randomMove(player: String): Move {
