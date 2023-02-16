@@ -9,6 +9,7 @@ fun main() {
         Welcome to CHAIN FIGHTER!!!
         
         An opponent appears before you. You each have 200 HP.
+        
         Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield.
         Only two moves will be available at each turn. Choose wisely! 
         Type start to begin!
