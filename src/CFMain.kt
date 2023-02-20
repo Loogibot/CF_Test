@@ -1,102 +1,172 @@
+
 fun main() {
 
-    val playerChoice1 = Fighter(200, "pos1")
-    val playerChoice2 = Fighter(200, "pos2")
-    val opponentChoice = Fighter(200, "pos3")
+    val playerChoice = Fighter("player")
+    val opponentChoice = Fighter("opponent")
 
-    val drawPlayerMove1 = when (playerChoice1.move) {
-        kick -> kick.name
-        punch -> punch.name
-        dodge -> dodge.name
-        grab -> grab.name
-        else -> shield.name
-    }
-    val drawPlayerMove2 = when (playerChoice2.move) {
-        kick -> kick.name
-        punch -> punch.name
-        dodge -> dodge.name
-        grab -> grab.name
-        else -> shield.name
-    }
-    val drawOpponentChoice = when (opponentChoice.move) {
-        kick -> kick.name
-        punch -> punch.name
-        dodge -> dodge.name
-        grab -> grab.name
-        else -> shield.name
-    }
-
-    println("""
+    println(
+        """        
+        Welcome to CHAIN FIGHTER!!!
         
-        Welcome to Chain Fighter!!!
-        An opponent appears before you. You each have 200 HP.
-        Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield.
-        Only two moves will be available at each turn. Choose wisely! 
-        Type start to begin!
+        An opponent appears before you!
         
-    """.trimIndent())
+        You each have 200 HP. You can play 3 moves during your turn, which is called a chain.
+        Your chain will be pitted against the opponent's chain, comparing each position. If 
+        the moves are the same, they cancel each other. When the greater number of moves 
+        per chain wins against the opposing chain, that chain's total damage is summed and
+        applied to the loser's HP. If one position succeeds for each player, the final moves
+        are compared.
+        
+        Each move also has a cost, which limits how many of them you can use in a chain. The 
+        chain has a value of 4 points. Kick and Punch cost 2 points, Grab and Dodge cost 1
+        and Shield costs 0. The chain's value returns to 4 after each turn.
+        
+        Lastly, the damage dealt is determined by the position, where first positions gains
+        points from second and third regardless of their success. If position 1 fails, 2
+        gets from 3, and finally if position 3 is the only successful move to win the chain
+        comparison, its damage is the only one applied.
+        
+        Type 'K' for Kick, 'P' for Punch, 'G' for Grab, 'D' for Dodge and 'S' for Shield,
+        in the order you want them to appear in your chain without spaces, like 'KPG' or 
+        'SDD'. Choose wisely! Type `start` to begin!
+        
+    """.trimIndent()
+    )
 
+    val gameTurn = GameState()
     val gameStart = readln()
 
     while (gameStart == "start") {
+        gameTurn.turn = true
 
-        println("""
-            $drawPlayerMove1 and $drawPlayerMove2 are your available move    
-    """.trimIndent())
-    break
+        println(
+            """
+            Your current HP is ${playerChoice.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
+            What are your 3 moves?:
+    """.trimIndent()
+        )
+
+        val input = readln()
+        println()
+        inputMove(input)
+        if (playerChoice.currentHP() <= 0)
+            println("Your HP is drained, you lose!")
+        if (opponentChoice.currentHP() <= 0)
+            println("Opponent HP is drained, you win!")
     }
 }
 
-class Results {
+fun inputMove(input: String) {
+    val validMoves = arrayListOf<Move>()
+    var moveSum = 0
+    val chainLimit = 4
+
+    if (input.length == 3) {
+        val pat = Regex("KPGDS", RegexOption.IGNORE_CASE)
+        pat.containsMatchIn(input)
+        input.lowercase()
+
+        input.forEach {
+            val m: Move = when (it) {
+                'k' -> kick
+                'p' -> punch
+                'g' -> grab
+                'd' -> dodge
+                else -> shield
+            }
+            validMoves.add(m)
+        }
+    } else {
+        println("Please enter K,P,G,D or S for each of the three positions in the chain")
+    }
+    validMoves.forEach {
+        moveSum += it.cost
+    }
+    if (moveSum <= chainLimit) {
+        val chain = Chain(validMoves)
+        println("Your moves are ${chain.firstPosition.name}, ${chain.secondPosition.name} and ${chain.thirdPosition.name}")
+    } else println("Your moves costs exceed the chain limit, try again")
 }
 
-class GameState { // controls the flow of the game via turns
-    val turnStart: Boolean = false
-    val moveOpen: Boolean = false // Make moves available to choose from
-    val moveRun: Boolean = false // runs moves
+class Results
+
+class GameState(// controls the flow of the game via turns
+    turnStart: Boolean = false, moveOpen: Boolean = false, // Make moves available to choose from
+    val moveRun: Boolean = false, // runs moves
     val result: Results? = null
+) {
+    var turn = when (turnStart) {
+        moveOpen -> true
+        else -> {}
+    }
 }
 
-open class Fighter(val hp: Int, private val position: String) {
+class Fighter(position: String) {
+    // implement game state
+    // val gameState = GameState()
+    // gameState.turn
 
     /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
     or you'll get expecting member declaration
     */
+    private val hp = 200
 
     private fun whoIsPlaying(position: String): Move {
         return when (position) {
-            "pos1" -> randomMove("move1")
+            "player" -> randomMove("move1")
             "pos2" -> randomMove("move2")
             else -> randomMove("Opponent")
         }
     }
 
-    val move = whoIsPlaying(position)
+    private val move = whoIsPlaying(position)
+
+    fun currentHP() = hp
+
+    fun drawMove(): String {
+        return when (move) {
+            kick -> kick.name
+            punch -> punch.name
+            dodge -> dodge.name
+            grab -> grab.name
+            else -> shield.name
+        }
+    }
 }
 
 /* Create moves to be selected, with built-in name, damage, first and second advantages
     all of this should be good for now
  */
 
-data class Move(val name: String,
-                val damage: Int,
-                val firstAdv: String,
-                val secondAdv: String) {
+class Chain(moves: ArrayList<Move>) {
+
+    val firstPosition = moves[0]
+    val secondPosition = moves[1]
+    val thirdPosition = moves[2]
+
 }
 
-val kick = Move("kick",25, "punch", "shield")
-val grab = Move("grab",5, "kick", "shield")
-val dodge = Move("dodge",0, "kick", "grab")
-val shield = Move("shield",5, "punch", "dodge")
-val punch = Move("punch",15, "grab", "dodge")
+fun moveComparison() {
 
-val allMoves = listOf(kick,grab,dodge,shield,punch)
+}
+
+data class Move(
+    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String, var cost: Int
+)
+
+val kick = Move("kick", 25, "punch", "shield", 2)
+val grab = Move("grab", 5, "kick", "shield", 2)
+val dodge = Move("dodge", 0, "kick", "grab", 1)
+val shield = Move("shield", 5, "punch", "dodge", 1)
+val punch = Move("punch", 15, "grab", "dodge", 0)
+
+val allMoves = listOf(kick, grab, dodge, shield, punch)
 
 // Randomly selects a move, might need to change to accommodate
 fun randomMove(player: String): Move {
     return when (player) {
-        "move1" -> allMoves.random()
-        "move2" -> allMoves.random()
+        "first" -> allMoves.random()
+        "second" -> allMoves.random()
         else -> allMoves.random()
     }
 }
