@@ -1,8 +1,8 @@
 
 fun main() {
 
-    val playerChoice = Fighter("player")
-    val opponentChoice = Fighter("opponent")
+    val player = Fighter("player")
+    val opponent = Fighter("opponent")
 
     println(
         """        
@@ -41,52 +41,22 @@ fun main() {
 
         println(
             """
-            Your current HP is ${playerChoice.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
+            Your current HP is ${player.currentHP}, opponent current HP is ${opponent.currentHP}.
             What are your 3 moves?:
     """.trimIndent()
         )
 
         val input = readln()
         println()
-        inputMove(input)
-        if (playerChoice.currentHP() <= 0)
-            println("Your HP is drained, you lose!")
-        if (opponentChoice.currentHP() <= 0)
-            println("Opponent HP is drained, you win!")
+        player.inputMove(input)
+        opponent.inputMove(randomMove())
+
+        if (player.currentHP <= 0) println("Your HP is drained, you lose!")
+        if (opponent.currentHP <= 0) println("Opponent HP is drained, you win!")
     }
 }
 
-fun inputMove(input: String) {
-    val validMoves = arrayListOf<Move>()
-    var moveSum = 0
-    val chainLimit = 4
 
-    if (input.length == 3) {
-        val pat = Regex("KPGDS", RegexOption.IGNORE_CASE)
-        pat.containsMatchIn(input)
-        input.lowercase()
-
-        input.forEach {
-            val m: Move = when (it) {
-                'k' -> kick
-                'p' -> punch
-                'g' -> grab
-                'd' -> dodge
-                else -> shield
-            }
-            validMoves.add(m)
-        }
-    } else {
-        println("Please enter K,P,G,D or S for each of the three positions in the chain")
-    }
-    validMoves.forEach {
-        moveSum += it.cost
-    }
-    if (moveSum <= chainLimit) {
-        val chain = Chain(validMoves)
-        println("Your moves are ${chain.firstPosition.name}, ${chain.secondPosition.name} and ${chain.thirdPosition.name}")
-    } else println("Your moves costs exceed the chain limit, try again")
-}
 
 class Results
 
@@ -111,26 +81,38 @@ class Fighter(position: String) {
     */
     private val hp = 200
 
-    private fun whoIsPlaying(position: String): Move {
-        return when (position) {
-            "player" -> randomMove("move1")
-            "pos2" -> randomMove("move2")
-            else -> randomMove("Opponent")
+    var currentHP = hp
+
+    fun inputMove(input: String) {
+        val validMoves = arrayListOf<Move>()
+        var moveSum = 0
+        val chainLimit = 4
+
+        if (input.length == 3) {
+            val pat = Regex("KPGDS", RegexOption.IGNORE_CASE)
+            pat.containsMatchIn(input)
+            input.lowercase()
+
+            input.forEach {
+                val m: Move = when (it) {
+                    'k' -> kick
+                    'p' -> punch
+                    'g' -> grab
+                    'd' -> dodge
+                    else -> shield
+                }
+                validMoves.add(m)
+            }
+        } else {
+            println("Please enter K,P,G,D or S for each of the three positions in the chain")
         }
-    }
-
-    private val move = whoIsPlaying(position)
-
-    fun currentHP() = hp
-
-    fun drawMove(): String {
-        return when (move) {
-            kick -> kick.name
-            punch -> punch.name
-            dodge -> dodge.name
-            grab -> grab.name
-            else -> shield.name
+        validMoves.forEach {
+            moveSum += it.cost
         }
+        if (moveSum <= chainLimit) {
+            val chain = Chain(validMoves)
+            println("Your moves are ${chain.firstPosition.name}, ${chain.secondPosition.name} and ${chain.thirdPosition.name}")
+        } else println("Your moves costs exceed the chain limit, try again")
     }
 }
 
@@ -139,11 +121,9 @@ class Fighter(position: String) {
  */
 
 class Chain(moves: ArrayList<Move>) {
-
     val firstPosition = moves[0]
     val secondPosition = moves[1]
     val thirdPosition = moves[2]
-
 }
 
 fun moveComparison() {
@@ -160,13 +140,7 @@ val dodge = Move("dodge", 0, "kick", "grab", 1)
 val shield = Move("shield", 5, "punch", "dodge", 1)
 val punch = Move("punch", 15, "grab", "dodge", 0)
 
-val allMoves = listOf(kick, grab, dodge, shield, punch)
+val allMoves = listOf("k", "p", "d", "s", "p")
 
-// Randomly selects a move, might need to change to accommodate
-fun randomMove(player: String): Move {
-    return when (player) {
-        "first" -> allMoves.random()
-        "second" -> allMoves.random()
-        else -> allMoves.random()
-    }
-}
+// Randomly selects a move
+fun randomMove(): String = allMoves.random() + allMoves.random() + allMoves.random()
