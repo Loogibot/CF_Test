@@ -1,8 +1,8 @@
 
 fun main() {
 
-    val player = Fighter("player")
-    val opponent = Fighter("opponent")
+    val player = Fighter("player", maxHp)
+    val opponent = Fighter("opponent", maxHp)
 
     println(
         """        
@@ -41,7 +41,7 @@ fun main() {
 
         println(
             """
-            Your current HP is ${player.currentHP}, opponent current HP is ${opponent.currentHP}.
+            Your current HP is ${player.currentHP}, opponent's current HP is ${opponent.currentHP}.
             What are your 3 moves?:
     """.trimIndent()
         )
@@ -69,9 +69,8 @@ class GameState(// controls the flow of the game via turns
     }
 }
 
-class Fighter(player: String) {
+class Fighter(player: String, hp: Int) {
     private val p = player
-    private val hp = 200
     var currentHP = hp
 
     fun inputMove(input: String) {
@@ -104,11 +103,15 @@ class Fighter(player: String) {
         if (moveSum <= chainLimit) {
             val chain = Chain(validMoves)
             println("$p's moves are ${chain.firstPosition.name}, ${chain.secondPosition.name} and ${chain.thirdPosition.name}")
-            println("$p's chain's cost $moveSum")
+            println(" ")
             if (currentChain.size == 6) {
                 println("${moveComparison(currentChain)}")
+                currentHP -= moveComparison(currentChain)
+                println("$currentHP")
             }
         } else println("$p's moves costs exceeds the chain's limit, try again")
+
+        resultsChain.clear()
     }
 }
 class Chain(moves: ArrayList<Move>) {
@@ -117,21 +120,29 @@ class Chain(moves: ArrayList<Move>) {
     val thirdPosition = moves[2]
 }
 
-fun moveComparison(current: ArrayList<Move>): ArrayList<Results> {
-    val pChain = current.subList(0, 2)
-    val oChain = current.subList(3, 5)
+fun moveComparison(current: ArrayList<Move>): Int {
+    val pChain = current.subList(0, 3)
+    val oChain = current.subList(3, 6)
+    var i = 0
 
     pChain.forEach {
-        var i = 0
         if (it.name != oChain[i].name) {
             if (it.name in oChain[i].firstAdv || it.name in oChain[i].secondAdv) {
-                resultsChain.add(Results.YOURMOVEHITS)
-            } else resultsChain.add(Results.OPPONENTMOVEHITS)
-        } else resultsChain.add(Results.CANCEL)
+                resultsChain.add(Results.OPPONENTMOVEHITS)
+            } else resultsChain.add(Results.YOURMOVEHITS)
+        }
         i += 1
     }
+    if (resultsChain.contains(Results.YOURMOVEHITS)) {
+        pChain.forEach { damageApplied += it.damage }
+    }
+    if (resultsChain.contains(Results.OPPONENTMOVEHITS)) {
+        oChain.forEach { damageApplied += it.damage }
+    }
+    println("$resultsChain")
 
-    return resultsChain
+    currentChain.clear()
+    return damageApplied
 }
 
 /* Create moves to be selected, with built-in name, damage, first and second advantages, and cost of move
@@ -143,6 +154,9 @@ data class Move(
 
 var currentChain = arrayListOf<Move>()
 var resultsChain = arrayListOf<Results>()
+
+var maxHp = 200
+var damageApplied = 0
 
 // build moves with a name, the damage it deals, the moves it has advantages over, and it's cost to use in the chain
 val kick = Move("kick", 25, "punch", "shield", 2)
