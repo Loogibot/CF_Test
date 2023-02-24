@@ -1,8 +1,8 @@
 
 fun main() {
 
-    val playerChoice = Fighter("player")
-    val opponentChoice = Fighter("opponent")
+    val player = Fighter("player")
+    val opponent = Fighter("opponent")
 
     println(
         """        
@@ -10,8 +10,8 @@ fun main() {
         
         An opponent appears before you!
         
-        You each have 200 HP. You can play 3 moves during your turn, which is called a chain.
-        Your chain will be pitted against the opponent's chain, comparing each position. If 
+        You each have 200 HP. You can play 3 moves each turn, which is called a chain.
+        Your chain will fight against the opponent's chain, comparing each position. If 
         the moves are the same, they cancel each other. When the greater number of moves 
         per chain wins against the opposing chain, that chain's total damage is summed and
         applied to the loser's HP. If one position succeeds for each player, the final moves
@@ -41,54 +41,22 @@ fun main() {
 
         println(
             """
-            Your current HP is ${playerChoice.currentHP()}, opponent current HP is ${opponentChoice.currentHP()}.
+            Your current HP is ${player.currentHP}, opponent current HP is ${opponent.currentHP}.
             What are your 3 moves?:
     """.trimIndent()
         )
 
         val input = readln()
         println()
-        inputMove(input)
-        if (playerChoice.currentHP() <= 0)
-            println("Your HP is drained, you lose!")
-        if (opponentChoice.currentHP() <= 0)
-            println("Opponent HP is drained, you win!")
+        player.inputMove(input)
+        opponent.inputMove(randomMoves())
+
+        if (player.currentHP <= 0) println("Your HP is drained, you lose!")
+        if (opponent.currentHP <= 0) println("Opponent HP is drained, you win!")
     }
 }
 
-fun inputMove(input: String) {
-    val validMoves = arrayListOf<Move>()
-    var moveSum = 0
-    val chainLimit = 4
-
-    if (input.length == 3) {
-        val pat = Regex("KPGDS", RegexOption.IGNORE_CASE)
-        pat.containsMatchIn(input)
-        input.lowercase()
-
-        input.forEach {
-            val m: Move = when (it) {
-                'k' -> kick
-                'p' -> punch
-                'g' -> grab
-                'd' -> dodge
-                else -> shield
-            }
-            validMoves.add(m)
-        }
-    } else {
-        println("Please enter K,P,G,D or S for each of the three positions in the chain")
-    }
-    validMoves.forEach {
-        moveSum += it.cost
-    }
-    if (moveSum <= chainLimit) {
-        val chain = Chain(validMoves)
-        println("Your moves are ${chain.firstPosition.name}, ${chain.secondPosition.name} and ${chain.thirdPosition.name}")
-    } else println("Your moves costs exceed the chain limit, try again")
-}
-
-class Results
+enum class Results { CANCEL, YOURMOVEHITS, OPPONENTMOVEHITS, YOUWIN, OPPONENTWINS, YOURCHAINISEFFECTIVE, OPPONENTCHAINISEFFECTIVE }
 
 class GameState(// controls the flow of the game via turns
     turnStart: Boolean = false, moveOpen: Boolean = false, // Make moves available to choose from
@@ -101,72 +69,89 @@ class GameState(// controls the flow of the game via turns
     }
 }
 
-class Fighter(position: String) {
-    // implement game state
-    // val gameState = GameState()
-    // gameState.turn
-
-    /* this class NEEDS this method, otherwise an init block or secondary constructor is needed,
-    or you'll get expecting member declaration
-    */
+class Fighter(player: String) {
+    private val p = player
     private val hp = 200
+    var currentHP = hp
 
-    private fun whoIsPlaying(position: String): Move {
-        return when (position) {
-            "player" -> randomMove("move1")
-            "pos2" -> randomMove("move2")
-            else -> randomMove("Opponent")
+    fun inputMove(input: String) {
+        val validMoves = arrayListOf<Move>()
+        var moveSum = 0
+        val chainLimit = 4
+
+        if (input.length == 3) {
+            val pat = Regex("KPGDS", RegexOption.IGNORE_CASE)
+            pat.containsMatchIn(input)
+            input.lowercase()
+
+            input.forEach {
+                val m: Move = when (it) {
+                    'k' -> kick
+                    'p' -> punch
+                    'g' -> grab
+                    'd' -> dodge
+                    else -> shield
+                }
+                validMoves.add(m)
+            }
+        } else {
+            println("Please enter K,P,G,D or S for each of the three positions in the chain")
         }
-    }
-
-    private val move = whoIsPlaying(position)
-
-    fun currentHP() = hp
-
-    fun drawMove(): String {
-        return when (move) {
-            kick -> kick.name
-            punch -> punch.name
-            dodge -> dodge.name
-            grab -> grab.name
-            else -> shield.name
+        validMoves.forEach {
+            moveSum += it.cost
         }
+        currentChain.addAll(validMoves)
+        if (moveSum <= chainLimit) {
+            val chain = Chain(validMoves)
+            println("$p's moves are ${chain.firstPosition.name}, ${chain.secondPosition.name} and ${chain.thirdPosition.name}")
+            println("$p's chain's cost $moveSum")
+            if (currentChain.size == 6) {
+                println("${moveComparison(currentChain)}")
+            }
+        } else println("$p's moves costs exceeds the chain's limit, try again")
     }
 }
-
-/* Create moves to be selected, with built-in name, damage, first and second advantages
-    all of this should be good for now
- */
-
 class Chain(moves: ArrayList<Move>) {
-
     val firstPosition = moves[0]
     val secondPosition = moves[1]
     val thirdPosition = moves[2]
-
 }
 
-fun moveComparison() {
+fun moveComparison(current: ArrayList<Move>): ArrayList<Results> {
+    val pChain = current.subList(0, 2)
+    val oChain = current.subList(3, 5)
 
+    pChain.forEach {
+        var i = 0
+        if (it.name != oChain[i].name) {
+            if (it.name in oChain[i].firstAdv || it.name in oChain[i].secondAdv) {
+                resultsChain.add(Results.YOURMOVEHITS)
+            } else resultsChain.add(Results.OPPONENTMOVEHITS)
+        } else resultsChain.add(Results.CANCEL)
+        i += 1
+    }
+
+    return resultsChain
 }
 
+/* Create moves to be selected, with built-in name, damage, first and second advantages, and cost of move
+    all of this should be good for now
+ */
 data class Move(
-    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String, var cost: Int
+    val name: String, val damage: Int, val firstAdv: String, val secondAdv: String, val cost: Int
 )
 
+var currentChain = arrayListOf<Move>()
+var resultsChain = arrayListOf<Results>()
+
+// build moves with a name, the damage it deals, the moves it has advantages over, and it's cost to use in the chain
 val kick = Move("kick", 25, "punch", "shield", 2)
-val grab = Move("grab", 5, "kick", "shield", 2)
+val punch = Move("punch", 15, "grab", "dodge", 2)
+val grab = Move("grab", 5, "kick", "shield", 1)
 val dodge = Move("dodge", 0, "kick", "grab", 1)
-val shield = Move("shield", 5, "punch", "dodge", 1)
-val punch = Move("punch", 15, "grab", "dodge", 0)
+val shield = Move("shield", 5, "punch", "dodge", 0)
 
-val allMoves = listOf(kick, grab, dodge, shield, punch)
+val allMoves = listOf("k", "p", "d", "s", "g")
 
-// Randomly selects a move, might need to change to accommodate
-fun randomMove(player: String): Move {
-    return when (player) {
-        "first" -> allMoves.random()
-        "second" -> allMoves.random()
-        else -> allMoves.random()
-    }
-}
+// Randomly selects 3 moves for a chain
+fun randomMoves(): String = allMoves.random() + allMoves.random() + allMoves.random()
