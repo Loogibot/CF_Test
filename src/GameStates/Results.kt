@@ -1,0 +1,11 @@
+package GameStates
+
+enum class Results {
+    CANCEL,
+    YOURMOVEHITS,
+    OPPONENTMOVEHITS,
+    YOUWIN,
+    OPPONENTWINS,
+    YOURCHAINISEFFECTIVE,
+    OPPONENTCHAINISEFFECTIVE
+}

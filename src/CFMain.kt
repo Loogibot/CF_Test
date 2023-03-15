@@ -1,3 +1,9 @@
+import GameStates.GameState
+import GameStates.Results
+import Moves.*
+import Moves.MoveData.M.allMoves
+import Players.Chain
+
 fun main() {
 
     val player = Fighter("player", maxHp)
@@ -58,77 +64,6 @@ fun main() {
     }
 }
 
-enum class Results {
-    CANCEL,
-    YOURMOVEHITS,
-    OPPONENTMOVEHITS,
-    YOUWIN,
-    OPPONENTWINS,
-    YOURCHAINISEFFECTIVE,
-    OPPONENTCHAINISEFFECTIVE
-}
-
-class GameState(
-// controls the flow of the game via turns
-    turnStart: Boolean = false,
-    moveOpen: Boolean = false, // Make moves available to choose from
-//    val moveRun: Boolean = false, // runs moves
-//    val result: Results? = null
-) {
-    var turn = when (turnStart) {
-        moveOpen -> true
-        else -> false
-    }
-}
-
-class Fighter(player: String, hp: Int) {
-    private val p = player
-    var currentHP = hp
-
-    fun inputMove(input: String) {
-        val validMoves = ArrayList<Move>()
-        var moveSum = 0
-        val chainLimit = 4
-
-        if (input.length == 3) {
-            val pat = Regex("KPGDS", RegexOption.IGNORE_CASE)
-            pat.containsMatchIn(input)
-            input.lowercase()
-
-            input.forEach {
-                val m: Move = when (it) {
-                    'k' -> kick
-                    'p' -> punch
-                    'g' -> grab
-                    'd' -> dodge
-                    's' -> shield
-                    else -> Move("Not A Move", 0, "None", "None", 10)
-                }
-                validMoves.add(m)
-            }
-        } else {
-            println("Please enter K,P,G,D or S for each of the three s in the chain")
-        }
-        validMoves.forEach {
-            moveSum += it.cost
-        }
-        allFightersChain.addAll(validMoves)
-        if (moveSum <= chainLimit) {
-            val c = Chain(validMoves)
-            println("$p's moves are ${c.first.name}, ${c.second.name} and ${c.third.name}")
-            println(" ")
-            if (allFightersChain.size == 6) {
-                moveComparison(allFightersChain)
-                allFightersChain.clear()
-            }
-        } else {
-            println("$p's moves costs exceeds the chain's limit, try again")
-            allFightersChain.clear()
-            resultsChain.clear()
-        }
-    }
-}
-
 fun moveComparison(current: ArrayList<Move>) {
     val pChain = current.subList(0, 3)
     val oChain = current.subList(3, 6)
@@ -169,44 +104,14 @@ fun moveComparison(current: ArrayList<Move>) {
 
     println(" ")
     println(appliedDamage.third)
-//    println("O's chain total dmg ${Chain(oChain).totalDamage} | p's chain total dmg ${Chain(pChain).totalDamage} ")
-//    println("$resultsMax $resultsChain | damage so far: ${appliedDamage.first} to player | ${appliedDamage.second} to opponent")
     println(" ")
 }
-
-class Chain(moves: MutableList<Move>) {
-    val first = moves[0]
-    val second = moves[1]
-    val third = moves[2]
-
-    val totalDamage = first.damage + second.damage + third.damage
-}
-
-/* Create moves to be selected, with built-in name, damage, first and second advantages, and cost of move
-    all of this should be good for now
- */
-data class Move(
-    val name: String,
-    val damage: Int,
-    val firstAdv: String,
-    val secondAdv: String,
-    val cost: Int
-)
 
 var allFightersChain = arrayListOf<Move>()
 var resultsChain = arrayListOf<Results>()
 
 var maxHp = 200
 var appliedDamage = Triple(0, 0, "")
-
-// build moves with a name, the damage it deals, the moves it has advantages over, and it's cost to use in the chain
-val kick = Move("kick", 25, "punch", "shield", 2)
-val punch = Move("punch", 15, "grab", "dodge", 2)
-val grab = Move("grab", 5, "kick", "shield", 1)
-val dodge = Move("dodge", 0, "kick", "grab", 1)
-val shield = Move("shield", 5, "punch", "dodge", 0)
-
-val allMoves = listOf("k", "p", "d", "s", "g")
 
 // Randomly selects 3 moves for a chain
 fun randomMoves(): String = allMoves.random() + allMoves.random() + allMoves.random()
