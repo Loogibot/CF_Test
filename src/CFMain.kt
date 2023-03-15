@@ -58,7 +58,15 @@ fun main() {
     }
 }
 
-enum class Results { CANCEL, YOURMOVEHITS, OPPONENTMOVEHITS, YOUWIN, OPPONENTWINS, YOURCHAINISEFFECTIVE, OPPONENTCHAINISEFFECTIVE }
+enum class Results {
+    CANCEL,
+    YOURMOVEHITS,
+    OPPONENTMOVEHITS,
+    YOUWIN,
+    OPPONENTWINS,
+    YOURCHAINISEFFECTIVE,
+    OPPONENTCHAINISEFFECTIVE
+}
 
 class GameState(
 // controls the flow of the game via turns
