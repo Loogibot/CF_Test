@@ -1,6 +1,6 @@
 import GameStates.GameState
 import GameStates.Results
-import Moves.*
+import Moves.Move
 import Moves.MoveData.M.allMoves
 import Players.Chain
 
@@ -53,11 +53,11 @@ fun main() {
         player.inputMove(input)
         opponent.inputMove(randomMoves())
 
-        if (player.currentHP <= 0) {
+        if (appliedDamage.first >= maxHp) {
             println("Your HP is drained, you lose!")
             break
         }
-        if (opponent.currentHP <= 0) {
+        if (appliedDamage.second >= maxHp) {
             println("Opponent HP is drained, you win!")
             break
         }
@@ -90,13 +90,13 @@ fun moveComparison(current: ArrayList<Move>) {
         Results.YOURMOVEHITS.toString() -> Triple(
             appliedDamage.first,
             appliedDamage.second + Chain(pChain).totalDamage,
-            Results.YOURMOVEHITS.toString() + ", Opponent takes " + Chain(pChain).totalDamage + "!"
+            Results.YOURMOVEHITS.toString() + ", Opponent takes " + Chain(pChain).totalDamage + " damage!"
         )
 
         Results.OPPONENTMOVEHITS.toString() -> Triple(
             appliedDamage.first + Chain(oChain).totalDamage,
             appliedDamage.second,
-            Results.OPPONENTMOVEHITS.toString() + ", You take " + Chain(oChain).totalDamage + "!"
+            Results.OPPONENTMOVEHITS.toString() + ", You take " + Chain(oChain).totalDamage + " damage!"
         )
 
         else -> Triple(appliedDamage.first, appliedDamage.second, Results.CANCEL.toString() + ", No one takes on damage!")
